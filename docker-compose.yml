@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./backend:/app
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./frontend
+    env_file:
+      - ./frontend/.env
+    ports:
+      - '5173:5173'
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+    command: npm run dev -- --host 0.0.0.0
+
+  db:
+    image: sqlite:latest
+    volumes:
+      - ./backend/data:/data
